@@ -1,5 +1,6 @@
 package io.github.sylvantitan.adhdassistant.data
 
+import androidx.lifecycle.LiveData
 import androidx.room.*
 import io.github.sylvantitan.adhdassistant.data.models.TaskEntity
 import io.github.sylvantitan.adhdassistant.data.models.TaskModel
@@ -12,25 +13,32 @@ interface TaskDAO {
     @Query("SELECT * FROM tasks WHERE task_id = :targetUID")
     suspend fun loadTaskByID(targetUID: Int): TaskModel
 
-    @Transaction
     @Query("SELECT * FROM tasks WHERE `group` = :targetGroup")
-    suspend fun loadTasksByGroup(targetGroup: String): List<TaskModel>
+    fun loadTasksByGroup(targetGroup: String): Flow<List<TaskEntity>>
 
-//    @Transaction
-//    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'false'")
-//    suspend fun loadUncompletedActiveTasks(): Flow<List<TaskEntity>>
-//
-//    @Transaction
-//    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'true'")
-//    suspend fun loadCompletedActiveTasks(): Flow<List<TaskEntity>>
+    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'false'")
+    fun loadIncompleteActiveTasks(): Flow<List<TaskEntity>>
 
-    @Transaction
-    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'true' AND date_completed < :beforeDate")
-    suspend fun loadCompletedActiveTasksSince(beforeDate: Date): List<TaskEntity>
+    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'false' AND `group` = :group")
+    fun loadIncompleteActiveTasksByGroup(group: String): Flow<List<TaskEntity>>
 
-    @Transaction
-    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'false' AND date_created > :afterDate")
-    suspend fun loadUncompletedActiveTasksSince(afterDate: Date): List<TaskEntity>
+    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'true'")
+    fun loadCompletedActiveTasks(): Flow<List<TaskEntity>>
+
+    @Query("SELECT * FROM tasks WHERE is_enabled = 'true' AND is_completed = 'true' AND `group` = :group")
+    fun loadCompletedActiveTasksByGroup(group: String): Flow<List<TaskEntity>>
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE is_enabled = 'true' AND is_completed = 'false'")
+    fun loadIncompleteTasksCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE is_enabled = 'true' AND is_completed = 'false' AND `group` = :group")
+    fun loadIncompleteTasksCountByGroup(group: String): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE is_enabled = 'true' AND is_completed = 'true'")
+    fun loadCompletedTasksCount(): Flow<Int>
+
+    @Query("SELECT COUNT(*) FROM tasks WHERE is_enabled = 'true' AND is_completed = 'true' AND `group` = :group")
+    fun loadCompletedTasksCountByGroup(group: String): Flow<Int>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTasks(vararg tasks: TaskEntity)

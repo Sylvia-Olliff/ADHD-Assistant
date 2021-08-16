@@ -15,6 +15,8 @@ import io.github.sylvantitan.adhdassistant.data.models.TaskEntity
 @TypeConverters(Converters::class)
 abstract class DB : RoomDatabase() {
     abstract fun taskDAO(): TaskDAO
+    abstract fun alertDAO(): AlertDAO
+    abstract fun goalDAO(): GoalDAO
 
     companion object {
         @Volatile private var instance: DB? = null
