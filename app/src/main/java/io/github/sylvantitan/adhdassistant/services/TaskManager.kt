@@ -14,10 +14,10 @@ import java.lang.Exception
 
 class TaskManager {
     companion object {
-        lateinit var db: DB
-        lateinit var taskDAO: TaskDAO
-        lateinit var alertDAO: AlertDAO
-        lateinit var goalDAO: GoalDAO
+        private lateinit var db: DB
+        private lateinit var taskDAO: TaskDAO
+        private lateinit var alertDAO: AlertDAO
+        private lateinit var goalDAO: GoalDAO
 
         fun init(context: Context) {
             db = DB.getInstance(context)
@@ -65,6 +65,10 @@ class TaskManager {
 
         suspend fun loadTaskModel(taskEntity: TaskEntity): TaskModel {
             return taskDAO.loadTaskByID(taskEntity.taskId)
+        }
+
+        suspend fun loadTaskModel(taskId: Int): TaskModel {
+            return taskDAO.loadTaskByID(taskId)
         }
 
         suspend fun addNewTasks(tasks: Array<TaskModel>): Boolean {

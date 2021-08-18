@@ -1,17 +1,17 @@
 package io.github.sylvantitan.adhdassistant.data.utils
 
-import android.icu.util.DateInterval
 import androidx.room.TypeConverter
-import java.util.*
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 
 class Converters {
     @TypeConverter
-    fun fromTimestamp(value: Long?): Date? {
-        return value?.let { Date(it) }
+    fun fromTimestamp(value: Long?): LocalDateTime? {
+        return value?.let { LocalDateTime.ofEpochSecond(it, 0, ZoneOffset.UTC) }
     }
 
     @TypeConverter
-    fun dateToTimestamp(date: Date?): Long? {
-        return date?.time
+    fun dateToTimestamp(date: LocalDateTime?): Long? {
+        return date?.toEpochSecond(ZoneOffset.UTC)
     }
 }
