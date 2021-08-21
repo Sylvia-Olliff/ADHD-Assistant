@@ -1,13 +1,14 @@
 package io.github.sylvantitan.adhdassistant.ui.composables
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import io.github.sylvantitan.adhdassistant.data.models.*
@@ -16,11 +17,9 @@ import java.time.LocalDateTime
 
 @Composable
 fun TaskCard(task: TaskModel) {
-    Card(
-        backgroundColor = MaterialTheme.colors.onSurface
-    ) {
+    Card{
         Column(Modifier.fillMaxWidth(0.9f)) {
-            Row(Modifier.padding(all = 8.dp)) {
+            Row {
                 TaskCardHeader(task = task.task)
             }
             Row(Modifier.padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 6.dp)) {
@@ -31,43 +30,36 @@ fun TaskCard(task: TaskModel) {
             }
         }
     }
-//    Column(modifier =
-//    Modifier
-//        .padding(2.dp)
-//        .fillMaxWidth()
-//    ) {
-//        Row(Modifier.padding(all = 8.dp)) {
-//            TaskCardHeader(task = task.task)
-//        }
-//        Row(Modifier.padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 6.dp)) {
-//            TaskCardDetails(task = task.task)
-//        }
-//        Row(Modifier.padding(start = 8.dp, end = 8.dp, top = 2.dp, bottom = 6.dp)) {
-//            TaskCardBody(task)
-//        }
-//    }
 }
 
 @Composable
 fun TaskCardHeader(task: TaskEntity) {
-    Text(
-        text = task.name,
-        color = MaterialTheme.colors.primaryVariant,
-        style = MaterialTheme.typography.h6
-    )
-    Spacer(Modifier.width(4.dp))
-
-    Column(Modifier.padding(all = 4.dp)) {
-        TaskCardText("Group: ${task.group}")
-        Spacer(Modifier.height(2.dp))
-        TaskCardText("Enabled: ${if (task.enabled) { "Yes" } else { "No" } }")
-    }
-    Spacer(Modifier.width(4.dp))
-
-    Column(Modifier.padding(all = 4.dp)) {
-        TaskCardText("Created: ${task.dateCreated.toFormattedString()}")
-        Spacer(Modifier.height(2.dp))
-        TaskCardText("Completed: ${if (task.completed && task.dateCompleted != null) { task.dateCompleted.toFormattedString() } else { "No" } }")
+    Surface(
+        modifier = Modifier.padding(start = 2.dp, top = 2.dp, end = 2.dp, bottom = 4.dp),
+        shape = RoundedCornerShape(size = 4.dp),
+        elevation = 2.dp,
+        border = BorderStroke(width = 1.dp, Color.Gray)
+    ) {
+        Row {
+            Column(Modifier.weight(2f, true)) {
+                Text(
+                    text = task.name,
+                    color = MaterialTheme.colors.primaryVariant,
+                    style = MaterialTheme.typography.h6,
+                    textAlign = TextAlign.Center
+                )
+            }
+            Column(Modifier.weight(1.5f, true)) {
+                TaskCardText("Group: ${task.group}")
+                Spacer(Modifier.height(2.dp))
+                TaskCardText("Enabled: ${if (task.enabled) { "Yes" } else { "No" } }")
+            }
+            Column(Modifier.weight(1.5f, true)) {
+                TaskCardText("Created: ${task.dateCreated.toFormattedString()}")
+                Spacer(Modifier.height(2.dp))
+                TaskCardText("Completed: ${if (task.completed && task.dateCompleted != null) { task.dateCompleted.toFormattedString() } else { "No" } }")
+            }
+        }
     }
 }
 
