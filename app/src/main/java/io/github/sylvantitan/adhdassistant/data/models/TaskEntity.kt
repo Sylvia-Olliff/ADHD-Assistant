@@ -13,6 +13,5 @@ data class TaskEntity(
     @ColumnInfo(name = "name") val name: String,
     @ColumnInfo(name = "is_completed", defaultValue = "false") val completed: Boolean,
     @ColumnInfo(name = "is_enabled", defaultValue = "true") val enabled: Boolean,
-    @ColumnInfo(name = "description") val description: String?,
-    @Embedded val checkin: CheckinEntity?,
+    @ColumnInfo(name = "description") val description: String?
 )
